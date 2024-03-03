@@ -1,0 +1,24 @@
+{% extends 'base.html' %}  <!-- Assuming you have a base template -->
+
+{% block content %}
+<div class="jumbotron text-center">
+   <h2>Welcome, {{ student.user.get_full_name }}!</h2>
+   <p>College: {{ college.clg_name }}</p>
+
+   <h3>Upcoming Exams in the Next 30 Minutes:</h3>
+   {% if upcoming_exams %}
+       <form method="post" action="">
+           {% csrf_token %}
+           <label for="exam_dropdown">Select Exam:</label>
+           <select name="exam" id="exam_dropdown">
+               {% for exam in upcoming_exams %}
+                   <option id="{{ exam.id }}" value="{{ exam.id }}">{{ exam.title }} - {{ exam.start_time }}</option>
+               {% endfor %}
+           </select>
+           <button type="submit">Proceed</button>
+       </form>
+   {% else %} 
+       <p>No upcoming exams in the next 30 minutes.</p>
+   {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block /title %}
+Student:Registration
+{% endblock %}
+
+{% block content %}
+  <h1>Student Registration</h1>
+  <form id="student-registration-form" method="post">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    {{ student_form.as_p }}
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+
+  <script>
+    // JavaScript form validation
+    document.getElementById('student-registration-form').addEventListener('submit', function(event) {
+      // Prevent the form from submitting if there are validation errors
+      if (!validateStudentForm()) {
+        event.preventDefault();
+      }
+    });
+
+    function validateStudentForm() {
+      // Get the form fields
+      const email = document.getElementById('id_email');
+      const password1 = document.getElementById('id_password1');
+      const password2 = document.getElementById('id_password2');
+      const college = document.getElementById('id_college');
+      const student_id = document.getElementById('id_student_id');
+      const branch = document.getElementById('id_branch');
+      const year_of_passing = document.getElementById('id_year_of_passing');
+
+      // Check that the email is valid
+      if (!validateEmail(email.value)) {
+        showError(email, 'Please enter a valid email address.');
+        return false;
+      }
+
+      // Check that the passwords match
+      if (password1.value !== password2.value) {
+        showError(password2, 'Passwords do not match.');
+        return false;
+      }
+
+      // Check that the student ID is a number
+      if (!validateNumber(student_id.value)) {
+        showError(student_id, 'Student ID must be a number.');
+        return false;
+      }
+
+      // Clear any previous error messages
+      clearErrors(email);
+      clearErrors(password1);
+      clearErrors(password2);
+      clearErrors(college);
+      clearErrors(student_id);
+      clearErrors(branch);
+      clearErrors(year_of_passing);
+
+      return true;
+    }
+
+    function validateEmail(email) {
+      // Simple email validation using a regular expression
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return regex.test(email);
+    }
+
+    function validateNumber(number) {
+      // Check that the string contains only digits
+      const regex = /^\d+$/;
+      return regex.test(number);
+    }
+
+    function showError(field, message) {
+      const error = field.nextElementSibling;
+      error.textContent = message;
+      error.style.display = 'block';
+    }
+
+    function clearErrors(field) {
+      const error = field.nextElementSibling;
+      error.textContent = '';
+      error.style.display = 'none';
+    }
+  </script>
+{% endblock %}

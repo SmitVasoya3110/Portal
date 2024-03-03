@@ -1,0 +1,159 @@
+{% extends 'base.html' %} {% block style %}
+<style>
+ 
+  .nav {
+    height: 5rem;
+    /* justify-content: center !important; */
+  }
+
+  .custom {
+    font-size: 1.5rem;
+  }
+</style>
+{% endblock %} {% block content %}
+<nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light nav">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse text-center flexing" id="navbarNavDropdown">
+    <ul class="navbar-nav text-center">
+      <li class="nav-item mx-3 custom">Name: {{request.user}}</li>
+      <li class="nav-item mx-3 custom">Email: {{request.user.email}}</li>
+      <li class="nav-item mx-3 custom">
+        College: {{request.user.student.college}}
+      </li>
+      <li class="nav-item mx-3 custom">Roll no.: {{request.user.student.enrollment_id}}</li>
+      
+      <li class="nav-item mx-3 custom">Timer :<span id="timer"></span></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-md-8 border border-success p-4 m-2 mx-auto">
+      {% if questions %}
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" id="aptitude-tab" data-toggle="tab" href="#aptitude" role="tab"
+            aria-controls="aptitude" aria-selected="true">Aptitude</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="programming-tab" data-toggle="tab" href="#programming" role="tab" aria-controls="programming"
+            aria-selected="false">Programming</a>
+        </li>
+      </ul>
+      <div class="mt-4"></div>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="aptitude" role="tabpanel" aria-labelledby="Aptitude"> 
+            {% for question in questions_page %} 
+                {% if question.category == 'Aptitude' %}
+                <h5>Q {{exam_id}}-{{ question.question_text }}</h5>
+                <br />
+                    {% for option in option_list %} 
+                        {% if option.question.id == question.id %}
+                            {{ option }}
+                            <input type="radio" name="ans{{question.id}}" class="jk" value="{{option.id}}" />{{option.text}}<br />
+                        
+                            {% endif %}
+                            {% endfor %}
+                            <button data-id="{{question.id}}" name="submit{{question.id}}" class="submitAnswer btn btn-sm btn-outline-info form-control">
+                              Submit Answer
+                            </button>
+                    <br />
+                    <hr>
+                    {% endif %} 
+            {% endfor %}
+
+        </div>
+        <div class="tab-pane fade" id="programming" role="tabpanel" aria-labelledby="Programming">
+          {% for question in questions_page %} 
+          {% if question.category == 'Programming' %}
+          <h5>Q-{{ question.question_text }}</h5>
+          <br />
+              {% for option in option_list %} 
+                  {% if option.question.id == question.id %}
+                      <input type="radio" name="ans{{question.id}}" value="{{option.id}}" />{{option.text}}<br />
+                      {% endif %}
+                      {% endfor %}
+                      <button  data-id="{{question.id}}" name="submit{{question.id}}"  class="submitAnswer btn btn-sm btn-outline-info form-control">
+                        Submit Answer
+                      </button>
+                      <div id="submitted"></div>
+              <br />
+              <hr>
+              {% endif %} 
+      {% endfor %}
+                </div>
+      </div>
+      <div class="text-center">
+
+        <a href="{% url 'student:result' %}" class="btn btn-success">Submit Quiz</a>
+      </div>
+      {% else %}
+      <h3>No Qustions</h3>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script>
+  var myTimer;
+function clock() {
+    myTimer = setInterval(myClock, 1000);
+    var c = 3600; //Initially set to 1 hour
+
+
+    function myClock() {
+        --c
+        var seconds = c % 60; // Seconds that cannot be written in minutes
+        var secondsInMinutes = (c - seconds) / 60; // Gives the seconds that COULD be given in minutes
+        var minutes = secondsInMinutes % 60; // Minutes that cannot be written in hours
+        var hours = (secondsInMinutes - minutes) / 60;
+        // Now in hours, minutes and seconds, you have the time you need.
+        // console.clear();
+        console.log(hours + ":" + minutes + ":" + seconds)
+        document.getElementById('timer').innerHTML = minutes + ":" + seconds
+        if (c == 0) {
+          clearInterval(myTimer);
+          window.location.href = 'http://127.0.0.1:8000/result/'
+        }
+    }
+}
+clock();
+</script>
+<script>
+  var saveAnsButton;
+
+  $('.submitAnswer').on('click',function(){
+    var id =$(this).data('id');
+    var submitted = document.getElementById('submitted');
+    var ans="Not Answered";
+    if ($("input:radio[name=ans"+id+"]").is(":checked")){
+      ans = $("input[name=ans"+id+"]:checked").val();
+      $(this).prop('disabled',true);
+      $(this).html('Answer Submited.....');
+
+    }
+    document.getElementById('submitted').innerHTML = 'Answer Submited'
+    //var submitans = document.getElementById('')
+    saveans(id,ans);
+  });
+   
+  function saveans(qid,ans){   
+      var req = new XMLHttpRequest();
+      var url = '/student/saveans?qid=' + String(qid)+'&ans=' + String(ans) + "&eid=" + String('{{exam_id}}');
+      req.open("GET", url, true);
+      req.send();
+
+  }
+  
+  
+  </script>
+{% endblock script%}

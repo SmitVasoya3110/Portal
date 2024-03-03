@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron text-center">
+    <h1 class="display-4">Welcome {{request.user}}</h1>
+    <hr class="my-4">
+    <p>Email :{{ request.user.email }}</p>
+    <p>College :{{ request.user.student.college }}</p>
+    <p>Enrollment ID. :{{ request.user.student.enrollment_id }}</p>
+    <p>Exam :{{ exam.title }}</p>
+    <p><b>Instruction</b></p>
+    <p>1- Time Duration will be 60 minutes</p>
+    <p>2- During Exam, Select one answer and click on "Submit Ans" to record answer and then click Next</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'student:start_exam' exam.id %}"  role="button">Start Exam</a>
+  </div>
+{% endblock %}
