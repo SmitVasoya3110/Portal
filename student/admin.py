@@ -3,13 +3,20 @@ from .models import CustomUser, Student, College, Exam, ExamResult, Question, Ch
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
-@admin.register(CustomUser)
+
 class CustomUserAdmin(UserAdmin):
-    list_display = (
-        'id', 'first_name', 'last_name', 'email', 'is_active', 'is_teacher', 'is_student'
+    model = CustomUser
+    ordering = ('email',)
+    list_display = ('email', 'first_name', 'last_name', 'is_teacher', 'is_superuser')
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        }),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
-    exclude = ["username"]
-    ordering = ("id",)
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Student)
 admin.site.register(College)
 admin.site.register(Exam)

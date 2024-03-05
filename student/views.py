@@ -136,3 +136,7 @@ def result(request):
 def signout(request):
     logout(request)
     return redirect('student:login')
+
+
+def landing_page(request):
+    return render(request, 'home.html')

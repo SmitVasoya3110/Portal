@@ -6,7 +6,7 @@ from student.models import CustomUser, College
 class Teacher(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     teacher_id = models.CharField(max_length=100, unique=True)
-    college = models.ForeignKey(College, on_delete=models.CASCADE)
+    college = models.ForeignKey(College, on_delete=models.CASCADE, related_name="college")
     branch = models.CharField(max_length=51)
 
     def __str__(self):

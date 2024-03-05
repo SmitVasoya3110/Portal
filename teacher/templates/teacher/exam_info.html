@@ -1,0 +1,66 @@
+{% extends "main.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="colleges col-md-10 my-4 offset-md-1 shadow-lg bg-white rounded align-middle">
+        <h3 class="head text-center text-muted align-middle">Questions<span class="mx-3"><a
+                    href="{% url 'teacher:addquestion' exam_id %}" class="btn btn-success">Add question</a></span></h3>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+
+            <tr>
+                <th scope="col" class="text-center">#</th>
+                <th scope="col" class="text-center">Question</th>
+                <th scope="col" class="text-center">Op1</th>
+                <th scope="col" class="text-center">Op2</th>
+                <th scope="col" class="text-center">Op3</th>
+                <th scope="col" class="text-center">Op4</th>
+                <th scope="col" class="text-center">Answer</th>
+                <th>Edit</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+
+            {% for question in question_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{question}}</td>
+                {% for option in option_list %}
+                    {% for key, value in option.items %}
+                        {% if key == question.id %}
+                            {% for i in value.options %}
+                                <td class="text-center">{{i.text}}</td>
+
+                            {% endfor %}
+                            {%  for i in counter %}
+                                <td>-</td>
+                            {% endfor %}
+                    
+                             <td class="text-center">{{ value.correct_ans }}</td>
+                             
+                             <td class="text-center"><a
+                                     href="{% url 'teacher:edit-question' exam_id=exam_id q_id=question.id %}"
+                                     class="btn btn-sm btn-outline-dark">Edit</a></td>
+                        {% endif %}
+                    {% endfor %}
+
+
+                    
+
+                {% endfor %}
+            </tr>
+            {% endfor %}
+
+
+
+
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

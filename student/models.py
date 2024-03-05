@@ -72,6 +72,8 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self) -> str:
+        return f"{self.user.email}-{self.user.first_name}-{self.user.last_name}"
 
 class ExamResult(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

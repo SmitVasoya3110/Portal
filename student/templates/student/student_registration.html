@@ -1,15 +1,32 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
-{% block /title %}
+{% block title %}
 Student:Registration
 {% endblock %}
 
+{% block style %}
+<style>
+
+    body, html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .center-container {
+        width: 50%; /* Adjust the width as needed */
+    }
+    </style>
+    {% endblock %}
 {% block content %}
-  <h1>Student Registration</h1>
-  <form id="student-registration-form" method="post">
+<form id="student-registration-form" method="post">
+    <h1>Student Registration</h1>
     {% csrf_token %}
-    {{ user_form.as_p }}
-    {{ student_form.as_p }}
+    {{ user_form|crispy }}
+    {{ student_form|crispy }}
     <button type="submit" class="btn btn-primary">Register</button>
   </form>
 
