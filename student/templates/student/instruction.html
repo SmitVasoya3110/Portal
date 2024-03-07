@@ -2,6 +2,9 @@
 {% block content %}
 
 <div class="jumbotron text-center">
+  {% for message in messages %}
+      {{ message }}
+  {% endfor %}
     <h1 class="display-4">Welcome {{request.user}}</h1>
     <hr class="my-4">
     <p>Email :{{ request.user.email }}</p>
@@ -9,6 +12,8 @@
     <p>Enrollment ID. :{{ request.user.student.enrollment_id }}</p>
     <p>Exam :{{ exam.title }}</p>
     <p><b>Instruction</b></p>
+    <p class="text-danger">Do not press Back button or close before submitting the exam</p>
+    <p class="text-danger">Otherwise you will not be able to give it again</p>
     <p>1- Time Duration will be 60 minutes</p>
     <p>2- During Exam, Select one answer and click on "Submit Ans" to record answer and then click Next</p>
     <a class="btn btn-primary btn-lg" href="{% url 'student:start_exam' exam.id %}"  role="button">Start Exam</a>

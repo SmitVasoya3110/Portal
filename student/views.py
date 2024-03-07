@@ -97,6 +97,9 @@ def exam(request, id):
     option_list = []
     global question_list
     question_list = list(questions)
+    check = Record.objects.filter(student_id=request.user.id, exam_id=id)
+    # if check.count() > 0:
+    #     return messages(request, "You have already given the exam")
     for question in question_list:
         Record.objects.create(student_id=request.user.id, exam_id=id, question_id=question.id)
         option = Choice.objects.filter(question=question.id)

@@ -89,7 +89,7 @@
       </div>
       <div class="text-center">
 
-        <a href="{% url 'student:result' %}" class="btn btn-success">Submit Quiz</a>
+        <a href="{% url 'student:result' %}" class="btn btn-success toResult disabled">End Exam</a>
       </div>
       {% else %}
       <h3>No Qustions</h3>
@@ -118,7 +118,7 @@ function clock() {
         var hours = (secondsInMinutes - minutes) / 60;
         // Now in hours, minutes and seconds, you have the time you need.
         // console.clear();
-        console.log(hours + ":" + minutes + ":" + seconds)
+        // console.log(hours + ":" + minutes + ":" + seconds)
         document.getElementById('timer').innerHTML = minutes + ":" + seconds
         if (c == 0) {
           clearInterval(myTimer);
@@ -130,7 +130,7 @@ clock();
 </script>
 <script>
   var saveAnsButton;
-
+  var answeredQuestions = [];
   $('.submitAnswer').on('click',function(){
     var id =$(this).data('id');
     var submitted = document.getElementById('submitted');
@@ -144,6 +144,9 @@ clock();
     document.getElementById('submitted').innerHTML = 'Answer Submited'
     //var submitans = document.getElementById('')
     saveans(id,ans);
+    answeredQuestions.push(id);
+    console.log(answeredQuestions, $('.submitAnswer').length )
+    checkIfAllQuestionsAnswered();
   });
    
   function saveans(qid,ans){   
@@ -153,7 +156,11 @@ clock();
       req.send();
 
   }
-  
+  function checkIfAllQuestionsAnswered() {
+        if (answeredQuestions.length == $('.submitAnswer').length) {
+            $('.toResult').removeClass('disabled')
+        }
+    }
   
   </script>
 {% endblock script%}

@@ -50,10 +50,10 @@ Student:Registration
       const year_of_passing = document.getElementById('id_year_of_passing');
 
       // Check that the email is valid
-      if (!validateEmail(email.value)) {
-        showError(email, 'Please enter a valid email address.');
-        return false;
-      }
+      // if (!validateEmail(email.value)) {
+      //   showError(email, 'Please enter a valid email address.');
+      //   return false;
+      // }
 
       // Check that the passwords match
       if (password1.value !== password2.value) {
@@ -81,7 +81,7 @@ Student:Registration
 
     function validateEmail(email) {
       // Simple email validation using a regular expression
-      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return regex.test(email);
     }
 
@@ -103,4 +103,104 @@ Student:Registration
       error.style.display = 'none';
     }
   </script>
+<script>
+  // JavaScript form validation
+  
+  document.getElementById('id_email').addEventListener('change', function () {
+    console.log('Validating email...');
+    validateEmail(this.value);
+  });
+
+  document.getElementById('id_password1').addEventListener('change', function () {
+    console.log('Validating password strength...');
+    validatePasswordStrength(this.value);
+  }); 
+  document.getElementById('id_first_name').addEventListener('input', function () {
+    validateNotNull(this);
+  });
+
+  document.getElementById('id_last_name').addEventListener('input', function () {
+    validateNotNull(this);
+  });
+
+  document.getElementById('id_college').addEventListener('change', function () {
+    validateNotNull(this);
+  });
+
+  document.getElementById('id_branch').addEventListener('input', function () {
+    validateNotNull(this);
+  });
+
+  document.getElementById('id_password2').addEventListener('change', function () {
+    console.log('Validating password match...');
+    const password1 = document.getElementById('id_password1').value;
+    if (this.value !== password1) {
+      showError(this, 'Passwords do not match.');
+    } else {
+      clearErrors(this);
+    }
+  });
+
+  document.getElementById('id_enrollment_id').addEventListener('change', function () {
+    console.log('Validating enrollment ID...');
+    validateNumber(this.value);
+  });
+
+  // Add similar event listeners for other fields if needed
+
+  function validateEmail(email) {
+    console.log('Inside validateEmail');
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const errorField = document.getElementById('id_email');
+    if (!regex.test(email)) {
+      showError(errorField, 'Please enter a valid email address.');
+    } else {
+      clearErrors(errorField);
+    }
+  }
+
+  function validateNumber(number) {
+    console.log('Inside validateNumber');
+    const regex = /^\d+$/;
+    const errorField = document.getElementById('id_enrollment_id');
+    if (!regex.test(number)) {
+      showError(errorField, 'Enrollment ID must be a number.');
+    } else {
+      clearErrors(errorField);
+    }
+  }
+
+  function validatePasswordStrength(password) {
+    console.log('Inside validatePasswordStrength');
+    const errorField = document.getElementById('id_password1');
+    if (password.length < 8) {
+      showError(errorField, 'Password should have at least 8 characters.');
+    } else {
+      clearErrors(errorField);
+    }
+  }
+
+  function showError(field, message) {
+    console.log('Showing error:', field.id, message);
+
+    // Create and append the error element
+    const error = document.createElement('p');
+    error.id = `${field.id}-error`;
+    error.className = 'text-danger'; // Optional: Apply Bootstrap text-danger class
+    error.textContent = message;
+    field.parentNode.appendChild(error); // Append error element next to the field
+  }
+
+  function clearErrors(field) {
+    console.log('Clearing errors:', field.id);
+    const error = document.getElementById(`${field.id}-error`);
+
+    if (error) {
+      error.remove(); // Remove the error element
+    }
+  }
+</script>
+
+
+  
 {% endblock %}
