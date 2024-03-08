@@ -24,5 +24,65 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            // Keep track of the last checked is_correct checkbox
+            var lastChecked = $('input[name$="-is_correct"]:checked')[0]
+    
+            // Handle change event for is_correct checkboxes
+            $('input[name$="-is_correct"]').change(function() {
+                // Uncheck the previous is_correct checkbox
+                if (lastChecked && this !== lastChecked) {
+                    lastChecked.checked = false;
+                }
+    
+                // Update the lastChecked variable
+                lastChecked = this;
+            });
+    
+            $('form').submit(function(e) {
+                // Reset previous error and styling
+                $('.textinput, input[name$="-is_correct"]').removeClass('error-border');
+                $('.error-messages').html('');
+    
+                var checkedCount = $('input[name$="-is_correct"]:checked').length;
+                var questionText = $('#id_question_text').val().trim();
+    
+                // Validate question text
+                if (questionText === '') {
+                    e.preventDefault(); // Prevent form submission
+                    $('#id_question_text').addClass('error-border');
+                    $('.error-messages').html('<div class="alert alert-danger" role="alert">Question text cannot be blank.</div>');
+                    return;
+                }
+    
+                // Validate choices
+                var choicesValid = true;
+                $('.textinput[id^="id_choices-"][id$="-text"]').each(function() {
+                    var choiceText = $(this).val().trim();
+                    if (choiceText === '') {
+                        choicesValid = false;
+                        $(this).addClass('error-border');
+                        return false; // Break the loop
+                    }
+                });
+    
+                if (!choicesValid) {
+                    e.preventDefault(); // Prevent form submission
+                    $('.error-messages').html('<div class="alert alert-danger" role="alert">All choices must have text.</div>');
+                    return;
+                }
+    
+                // Validate at least one choice is correct
+                if (checkedCount === 0) {
+                    e.preventDefault(); // Prevent form submission
+                    $('input[name$="-is_correct"]').addClass('error-border');
+                    $('.error-messages').html('<div class="alert alert-danger" role="alert">Please select at least one choice as correct.</div>');
+                    return;
+                }
+            });
+        });
+    </script>
 {% endblock  %}
     

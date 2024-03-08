@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.utils import timezone
-
+from django.db import IntegrityError
 from student.models import Exam, Choice, Question, Record
 from .forms import UserCreationForm, StudentCreationForm, StudentLoginForm
 
@@ -91,25 +91,31 @@ def student_dashboard(request):
 
 
 def exam(request, id):
-    questions = Question.objects.filter(exam__id=id)
-    global answer_list
-    answer_list = []
-    option_list = []
-    global question_list
-    question_list = list(questions)
-    check = Record.objects.filter(student_id=request.user.id, exam_id=id)
-    # if check.count() > 0:
-    #     return messages(request, "You have already given the exam")
-    for question in question_list:
-        Record.objects.create(student_id=request.user.id, exam_id=id, question_id=question.id)
-        option = Choice.objects.filter(question=question.id)
-        option_list.extend(list(option))
-    exam_question = question_list[:]
-    print(option_list)
-    random.shuffle(question_list)
-    context = {'questions': exam_question, 'questions_page': exam_question, 'option_list': option_list, 'exam_id':id}
-    return render(request, 'student/exam.html', context)
+    try:
+        questions = Question.objects.filter(exam__id=id)
+        global answer_list
+        answer_list = []
+        option_list = []
+        global question_list
+        question_list = list(questions)
+        check = Record.objects.filter(student_id=request.user.id, exam_id=id)
+        if check.count() > 0:
+            return messages(request, "You have already given the exam")
+        for question in question_list:
+            Record.objects.create(student_id=request.user.id, exam_id=id, question_id=question.id)
+            option = Choice.objects.filter(question=question.id)
+            option_list.extend(list(option))
+        exam_question = question_list[:]
+        print(option_list)
+        random.shuffle(question_list)
+        context = {'questions': exam_question, 'questions_page': exam_question, 'option_list': option_list, 'exam_id':id}
+        return render(request, 'student/exam.html', context)
+    except IntegrityError as e:
+        return redirect('home')
+    except TypeError as e:
+        return redirect('home')
 
+    
 def saveans(request):
     print("Save Ans is Called")
     print(request.GET)

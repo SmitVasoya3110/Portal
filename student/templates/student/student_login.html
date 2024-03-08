@@ -6,6 +6,7 @@
 
     body, html {
         height: 100%;
+        width: 100%;
         margin: 0;
         display: flex;
         align-items: center;
@@ -15,15 +16,26 @@
     .center-container {
         width: 50%; /* Adjust the width as needed */
     }
+    .custom-width{
+      width: 20%;
+      box-shadow:  20px 20px 10px gray;
+      background: rgb(233 233 233)
+    }
     </style>
     {% endblock %}
 
 {% block login %}
-<form method="post" action="">
-        <h2>Student Login</h2>
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit">Login</button>
-    </form>
-    
+<div class="custom-width p-4">
+    <form method="post" action="">
+        <div class="text-center m-3"><h3>Student Login</h3></div>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="text-center"><button type="submit" class="btn btn-info btn-md">Login</button></div>
+        </form>
+        <div class="mt-2">
+            <div class="d-flex justify-content-center links">
+                Don't have an account? <a href="{% url 'student:student_registration' %}" class="ml-2">Sign Up</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

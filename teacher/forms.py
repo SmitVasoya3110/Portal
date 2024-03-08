@@ -3,7 +3,8 @@ from django.forms import ModelForm
 from django.forms import inlineformset_factory
 
 
-ChoiceFormSet = inlineformset_factory(Question, Choice, fields=('text', 'is_correct'), extra=4)
+ChoiceFormSet = inlineformset_factory(Question, Choice, fields=('text', 'is_correct'), extra=4, can_delete=False, max_num=4)
+
 
 
 class QuestionForm(ModelForm):

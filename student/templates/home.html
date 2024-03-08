@@ -60,7 +60,7 @@
         }
         ul li ul.dropdown{
             width: 100%;
-            background: #3a91ee;
+            background: #071627;
             /* background: #22438c; */
             color: white;
             position: absolute;
@@ -90,7 +90,7 @@
 
 
   <div class="bs-example">
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top" style="background-color: #212529; height: 70px;">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #212529; height: 4em;">
     <a style="color: #ffffff;text-decoration: none; " href="/"><font face = "verdana" size =" 5">Online Examination</font><br /></a>  
       <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
@@ -98,7 +98,6 @@
 
       <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
         <div class="navbar-nav">
-    
         </div>
 
 
@@ -107,12 +106,14 @@
           <li><a href="{% url 'home' %}">Home</a></li>
           <li><a href="{% url 'teacher:loginadmin' %}">Teacher</a></li>
           <li>
-              <a href="#">Student</a>
-              <ul class="dropdown">
-                  <li><a href="{% url 'student:student_login' %}">Login</a></li>
-                  <li><a href="{% url 'student:student_registration' %}">Register</a></li>
-              </ul>
+            <a href="#">Student</a>
+            <ul class="dropdown">
+              <li><a href="{% url 'student:student_login' %}">Login</a></li>
+              <li><a href="{% url 'student:student_registration' %}">Register</a></li>
+            </ul>
           </li>
+          <li><a href="{% url 'contact:contact_us' %}">Contact Us</a></li>
+          <li><a href="{% url 'contact:feedback' %}">Feedback</a></li>
           <li><a href="{% url 'admin:login' %}">Admin</a></li>
       </ul>
 

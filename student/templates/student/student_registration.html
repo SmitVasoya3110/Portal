@@ -7,105 +7,125 @@ Student:Registration
 
 {% block style %}
 <style>
+  body,
+  html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f7f7
+  }
 
-    body, html {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .center-container {
-        width: 50%; /* Adjust the width as needed */
-    }
-    </style>
-    {% endblock %}
+  .center-container {
+    width: 50%;
+    /* Adjust the width as needed */
+  }
+
+  .custom-width {
+    width: 30%;
+    box-shadow: 20px 20px 10px gray;
+    background: rgb(233 233 233)
+  }
+</style>
+{% endblock %}
 {% block content %}
-<form id="student-registration-form" method="post">
-    <h1>Student Registration</h1>
-    {% csrf_token %}
-    {{ user_form|crispy }}
-    {{ student_form|crispy }}
-    <button type="submit" class="btn btn-primary">Register</button>
+<div class="custom-width p-4">
+
+  <form id="student-registration-form" method="post">
+  <div class="text-center mb-4">
+    <h2>Student Registration</h2>
+  </div>
+  {% csrf_token %}
+  {{ user_form|crispy }}
+  {{ student_form|crispy }}
+  <div class="text-center"><button type="submit" class="btn btn-info btn-md">Register</button></div>
   </form>
+  <div class="mt-2">
+    <div class="d-flex justify-content-center links">
+      Already have an account? <a href="{% url 'student:student_login' %}" class="ml-2">Login</a>
+    </div>
+  </div>
+</div>
 
-  <script>
-    // JavaScript form validation
-    document.getElementById('student-registration-form').addEventListener('submit', function(event) {
-      // Prevent the form from submitting if there are validation errors
-      if (!validateStudentForm()) {
-        event.preventDefault();
-      }
-    });
-
-    function validateStudentForm() {
-      // Get the form fields
-      const email = document.getElementById('id_email');
-      const password1 = document.getElementById('id_password1');
-      const password2 = document.getElementById('id_password2');
-      const college = document.getElementById('id_college');
-      const student_id = document.getElementById('id_student_id');
-      const branch = document.getElementById('id_branch');
-      const year_of_passing = document.getElementById('id_year_of_passing');
-
-      // Check that the email is valid
-      // if (!validateEmail(email.value)) {
-      //   showError(email, 'Please enter a valid email address.');
-      //   return false;
-      // }
-
-      // Check that the passwords match
-      if (password1.value !== password2.value) {
-        showError(password2, 'Passwords do not match.');
-        return false;
-      }
-
-      // Check that the student ID is a number
-      if (!validateNumber(student_id.value)) {
-        showError(student_id, 'Student ID must be a number.');
-        return false;
-      }
-
-      // Clear any previous error messages
-      clearErrors(email);
-      clearErrors(password1);
-      clearErrors(password2);
-      clearErrors(college);
-      clearErrors(student_id);
-      clearErrors(branch);
-      clearErrors(year_of_passing);
-
-      return true;
-    }
-
-    function validateEmail(email) {
-      // Simple email validation using a regular expression
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    }
-
-    function validateNumber(number) {
-      // Check that the string contains only digits
-      const regex = /^\d+$/;
-      return regex.test(number);
-    }
-
-    function showError(field, message) {
-      const error = field.nextElementSibling;
-      error.textContent = message;
-      error.style.display = 'block';
-    }
-
-    function clearErrors(field) {
-      const error = field.nextElementSibling;
-      error.textContent = '';
-      error.style.display = 'none';
-    }
-  </script>
 <script>
   // JavaScript form validation
   
+  document.getElementById('student-registration-form').addEventListener('submit', function(event) {
+    // Prevent the form from submitting if there are validation errors
+    if (!validateStudentForm()) {
+      event.preventDefault();
+    }
+  });
+
+  function validateStudentForm() {
+    // Get the form fields
+    const email = document.getElementById('id_email');
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    const college = document.getElementById('id_college');
+    const student_id = document.getElementById('id_student_id');
+    const branch = document.getElementById('id_branch');
+    const year_of_passing = document.getElementById('id_year_of_passing');
+
+    // Check that the email is valid
+    // if (!validateEmail(email.value)) {
+    //   showError(email, 'Please enter a valid email address.');
+    //   return false;
+    // }
+
+    // Check that the passwords match
+    if (password1.value !== password2.value) {
+      showError(password2, 'Passwords do not match.');
+      return false;
+    }
+
+    // Check that the student ID is a number
+    if (!validateNumber(student_id.value)) {
+      showError(student_id, 'Student ID must be a number.');
+      return false;
+    }
+
+    // Clear any previous error messages
+    clearErrors(email);
+    clearErrors(password1);
+    clearErrors(password2);
+    clearErrors(college);
+    clearErrors(student_id);
+    clearErrors(branch);
+    clearErrors(year_of_passing);
+
+    return true;
+  }
+
+  function validateEmail(email) {
+    // Simple email validation using a regular expression
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
+  function validateNumber(number) {
+    // Check that the string contains only digits
+    const regex = /^\d+$/;
+    return regex.test(number);
+  }
+
+  function showError(field, message) {
+    const error = field.nextElementSibling;
+    error.textContent = message;
+    error.style.display = 'block';
+  }
+
+  function clearErrors(field) {
+    const error = field.nextElementSibling;
+    error.textContent = '';
+    error.style.display = 'none';
+  }
+  // </script>
+<script>
+  // JavaScript form validation
+
   document.getElementById('id_email').addEventListener('change', function () {
     console.log('Validating email...');
     validateEmail(this.value);
@@ -114,7 +134,7 @@ Student:Registration
   document.getElementById('id_password1').addEventListener('change', function () {
     console.log('Validating password strength...');
     validatePasswordStrength(this.value);
-  }); 
+  });
   document.getElementById('id_first_name').addEventListener('input', function () {
     validateNotNull(this);
   });
@@ -169,6 +189,16 @@ Student:Registration
       clearErrors(errorField);
     }
   }
+  function validateNotNull(field) {
+    const value = field.value.trim();
+    if (value === '') {
+      showError(field, `${field.name} is required.`);
+      return false;
+    } else {
+      clearErrors(field);
+      return true;
+    }
+  }
 
   function validatePasswordStrength(password) {
     console.log('Inside validatePasswordStrength');
@@ -202,5 +232,5 @@ Student:Registration
 </script>
 
 
-  
+
 {% endblock %}
