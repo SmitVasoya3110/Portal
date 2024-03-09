@@ -45,7 +45,7 @@ def allStudents(request):
     teacher = Teacher.objects.get(user=request.user)
     all_students = Student.objects.filter(college=teacher.college)
 
-    context = {'all_students':all_students}
+    context = {'students':all_students}
     return render(request, 'teacher/studentlist.html', context)
 
 def fetchExams(request):
