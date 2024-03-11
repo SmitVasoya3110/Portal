@@ -11,6 +11,7 @@ class ContactUs(models.Model):
     
     class Meta:
         verbose_name = "Contact Us"
+        verbose_name_plural = "Contact Us"
 
 class Feedback(models.Model):
     username = models.CharField(max_length = 50)

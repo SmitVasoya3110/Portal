@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -126,6 +126,45 @@ def editQuestion(request, exam_id, q_id):
         'question': question
     }
     return render(request, 'teacher/update_question.html', context)
+
+def deleteQuestion(request, exam_id, q_id):
+     # Get the exam instance
+    try:
+        exam = get_object_or_404(Exam, pk=exam_id)
+
+        # Get the question instance
+        question = get_object_or_404(Question, pk=q_id, exam=exam)
+
+        question.delete()
+
+        return  redirect(reverse('teacher:edit-question',kwargs={'exam_id' : exam_id, 'q_id':q_id}))
+    except Exception as e:
+        print(e)
+        return JsonResponse({"message":"Unable to delete"})
+    # if request.method == 'POST':
+    #     question_form = QuestionForm(request.POST, instance=question)
+    #     choice_formset = ChoiceFormSet(request.POST, instance=question)
+
+    #     if question_form.is_valid() and choice_formset.is_valid():
+    #         question = question_form.save()
+    #         choices = choice_formset.save(commit=False)
+            
+    #         for choice in choices:
+    #             choice.question = question
+    #             choice.save()
+
+    #         return redirect('teacher:exam-info',id=exam_id)  # Redirect to a success page
+
+    # else:
+    #     question_form = QuestionForm(instance=question)
+    #     choice_formset = ChoiceFormSet(instance=question)
+    # context = {
+    #     'question_form': question_form,
+    #     'choice_form': choice_formset,
+    #     'exam': exam,
+    #     'question': question
+    # }
+    # return render(request, 'teacher/update_question.html', context)
 
 # def editQuestion(request, exam_id, q_id):
 #     question = Question.objects.get(id=q_id)

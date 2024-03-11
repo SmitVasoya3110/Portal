@@ -20,6 +20,7 @@
                 <th scope="col" class="text-center">Op4</th>
                 <th scope="col" class="text-center">Answer</th>
                 <th>Edit</th>
+                <th>Delete</th>
 
             </tr>
         </thead>
@@ -46,21 +47,59 @@
                              <td class="text-center"><a
                                      href="{% url 'teacher:edit-question' exam_id=exam_id q_id=question.id %}"
                                      class="btn btn-sm btn-outline-dark">Edit</a></td>
+
+                             <td class="text-center"><button type="button"  onclick="setQuestionText('{{ question.question_text }}','{{exam_id}}','{{question.id}}')" data-arg1="{{ question.id }}" data-arg2="{{ exam.id }}" data-id="{{question.text}}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+                                Delete
+                              </button></td>
                         {% endif %}
                     {% endfor %}
 
-
-                    
 
                 {% endfor %}
             </tr>
             {% endfor %}
 
-
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to delete the question? : 
+                      <p><b id="qsn"></b></p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <a href="" type="button" class="btn btn-danger deleteQns">Delete</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
 
         </tbody>
     </table>
 </div>
+
+{% block scripts %}
+
+<script>
+   function setQuestionText(questionText, arg1, arg2) {
+        console.log(questionText);
+        let deleteUrl = `/teacher/delete-question/${arg1}/${arg2}`;
+        console.log(deleteUrl);
+        document.getElementById('qsn').textContent = questionText;
+        var anchor = document.querySelector('.deleteQns');
+        anchor.href = deleteUrl;
+        // document.getElementById('deleteButton').addEventListener('click', function () {
+            
+        // });
+    }
+</script>
+{% endblock scripts %}
 
 {% endblock %}
