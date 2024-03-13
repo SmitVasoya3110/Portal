@@ -21,6 +21,7 @@ class Feedback(models.Model):
     email = models.CharField(max_length = 50)
     message = models.TextField()
     rating = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self) -> str:
         return self.email
@@ -30,6 +31,10 @@ class AdminReply(models.Model):
     admin_user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     reply_message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Admin Reply"
+        verbose_name_plural = "Admin Replies"
 
     def __str__(self):
         return f"Reply to {self.contact_us.email}"

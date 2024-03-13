@@ -10,7 +10,8 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import IntegrityError
-from student.models import Exam, Choice, Question, Record
+from contact.models import Feedback
+from student.models import Exam, Choice, ExamResult, Question, Record, Student
 from .forms import UserCreationForm, StudentCreationForm, StudentLoginForm
 
 global question_list
@@ -111,8 +112,10 @@ def exam(request, id):
         context = {'questions': exam_question, 'questions_page': exam_question, 'option_list': option_list, 'exam_id':id}
         return render(request, 'student/exam.html', context)
     except IntegrityError as e:
+        print(e)
         return redirect('home')
     except TypeError as e:
+        print(e)
         return redirect('home')
 
     
@@ -125,7 +128,7 @@ def saveans(request):
     Record.objects.filter(question_id=question_id, exam_id=exam_id, student_id=request.user.id).update(answer=answer)
     return JsonResponse({"message":"Record added"})
 
-def result(request):
+def result(request,id):
     score = 0
     global question_list
     compare_list = question_list[:]
@@ -140,6 +143,9 @@ def result(request):
         if int(record.answer) == int(true_answer.id):
 
             score += 2
+    exam = Exam.objects.get(pk=id)
+    student = Student.objects.get(user=request.user)
+    exam_result = ExamResult.objects.create(user=request.user, student=student, exam=exam, score=score)
     return render(request, 'student/result.html', {'score':score})
 
 def signout(request):
@@ -148,4 +154,5 @@ def signout(request):
 
 
 def landing_page(request):
-    return render(request, 'home.html')
+    feedbacks = Feedback.objects.all().order_by('-created_at')[:5]  # Change 5 to the desired number of feedbacks
+    return render(request, 'home.html',{'feedbacks': feedbacks})

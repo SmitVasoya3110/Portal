@@ -79,7 +79,7 @@ class ExamResult(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    completed_at = models.DateTimeField()
+    completed_at = models.DateTimeField(auto_now_add=True)
     score = models.FloatField()
 
     def clean(self):

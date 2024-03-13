@@ -2,6 +2,8 @@ import time
 from django.contrib import admin
 from contact.forms import AdminReplyForm
 from contact.models import AdminReply, ContactUs, Feedback
+from django.core.mail import send_mail
+from django.conf import settings 
 # Register your models here.
 
 class AdminReplyInline(admin.StackedInline):
@@ -22,8 +24,10 @@ class ContactUsAdmin(admin.ModelAdmin):
     #     obj.replied = True
     #     obj.save()
     def save_related(self, request:list, form, formsets, change):
+        print(form)
+        message = form.cleaned_data.get('message')
+        email_id = form.cleaned_data.get('email')
         for formset in formsets:
-            print(dir(request))
             # Found this simple way to check dynamic class instance.
             if formset.model == AdminReply:
                 instances = formset.save(commit=False)
@@ -31,7 +35,24 @@ class ContactUsAdmin(admin.ModelAdmin):
                 for instance in instances:
                     instance.admin_user = request.user
                     instance.save()
-               
+
+                    subject = 'Reply: Contact Us'
+                    html_message = f"""<p>{message}</p> 
+                                    <hr>
+                                    <p>{instance.reply_message}</p>"""
+                    recipient_list = [email_id]
+
+                    form.instance.replied = True
+                    form.instance.save()
+                    
+                    send_mail(
+                    subject='Your Subject Here',
+                    message='',  # Set an empty string for plain text content (not used in this case)
+                    recipient_list=recipient_list,
+                    html_message=html_message,
+                    from_email=settings.DEFAULT_FROM_EMAIL
+                )
+
         super(ContactUsAdmin, self).save_related(request, form, formsets, change)
 
 @admin.register(AdminReply)

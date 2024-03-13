@@ -8,6 +8,6 @@ urlpatterns = [
     path('dashboard/', student_dashboard, name='student_dashboard'),
     path('exam/<id>', exam, name='start_exam'),
     path('saveans/', saveans, name='start_exam'),
-    path('result/', result, name='result'),
+    path('result/<id>', result, name='result'),
     path('logout/', signout, name='logout'),
 ]

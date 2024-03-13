@@ -1,211 +1,219 @@
-
 <!DOCTYPE html>
 
 <html lang="en" dir="ltr">
 
 <style>
-  .jumbotron{
+  .jumbotron {
     margin-bottom: 0px;
   }
 </style>
+
 <body>
   <!DOCTYPE html>
 
-<html lang="en">
+  <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-  <style type="text/css">
-    .bs-example {
-      margin: 0px;
-      /* height: 10px; */
+    <style type="text/css">
+      .bs-example {
+        margin: 0px;
+        /* height: 10px; */
 
-    }
-    .bg-dark {
-    background-color: #212529!important;
-}
-*{
-  margin: 0;
-  padding: 0;
-  /* font-size: 5px; */
-}
+      }
 
+      .bg-dark {
+        background-color: #212529 !important;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        /* font-size: 5px; */
+      }
+
+
+
+      ul {
+        list-style: none;
+        /* background: #22438c; */
+      }
+
+      ul li {
+        display: inline-block;
+        position: relative;
+      }
+
+      ul li a {
+        display: block;
+        padding: 20px 25px;
+        color: #fff;
+        text-decoration: none;
+        text-align: center;
+        font-size: 20px;
+      }
+
+      ul li ul.dropdown li {
+        display: block;
+
+      }
+
+      ul li ul.dropdown {
+        width: 100%;
+        background: #071627;
+        /* background: #22438c; */
+        color: white;
+        position: absolute;
+        z-index: 999;
+        display: none;
+        /* margin-right: 200px; */
+      }
+
+      ul li a {
+        /* text-align: center; */
+        margin-right: 20px;
+      }
+
+      ul li a:hover {
+        color: #d2d2d2;
+        /* background: #112c66; */
+      }
+
+      ul li:hover ul.dropdown {
+        display: block;
+      }
+
+      a:hover {
+        text-decoration: none;
+      }
+      footer {
+        padding: 0px 0px 0px 0px;
+        background-color: #212529;
+        margin: 0px;
+      }
+
+      .fa {
+        padding: 20px;
+        font-size: 23px;
+        width: 60px;
+        text-align: center;
+        text-decoration: none;
+        margin: 5px 2px;
+        border-radius: 50%;
+      }
+
+      .fa:hover {
+        opacity: 0.5;
+        text-decoration: none;
+      }
+
+
+
+      p {
+        text-align: center;
+
+      }
+    </style>
+  </head>
+
+  <body>
+
+
+
+    <div class="bs-example">
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #212529; height: 4em;">
+        <a style="color: #ffffff;text-decoration: none; " href="/">
+          <font face="verdana" size=" 5">Online Examination</font><br />
+        </a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+          <div class="navbar-nav">
+          </div>
+
+
+
+          <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'teacher:loginadmin' %}">Teacher</a></li>
+            <li>
+              <a href="#">Student</a>
+              <ul class="dropdown">
+                <li><a href="{% url 'student:student_login' %}">Login</a></li>
+                <li><a href="{% url 'student:student_registration' %}">Register</a></li>
+              </ul>
+            </li>
+            <li><a href="{% url 'contact:contact_us' %}">Contact Us</a></li>
+            <li><a href="{% url 'contact:feedback' %}">Feedback</a></li>
+            <li><a href="{% url 'admin:login' %}">Admin</a></li>
+          </ul>
+
+
+
+
+        </div>
+      </nav>
+      <br>
+      <section id="section-jumbotron" class="jumbotron jumbotron-fluid d-flex justify-content-center align-items-center">
+        <div class="container text-center">
+          <h2 class="display-3 text-info">Online Examination System</h2>
+          <p class="display-4 d-none d-sm-block">Attend your examinations online!</p>
+          <p class="lead">Sign Up now to start your first online examination</p>
+    
+    
+          <p><strong> Start Your Journey Here:</strong></p>
+          <a href="{% url 'student:student_registration' %}" class="btn btn-lg btn-info"
+            style="padding-right: 35px; border-radius: 0%;"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Sign Up
+            as Student</a>
+    
+          <br><br><br>
+        </div>
+      </section>
+    </div>
+
+    <div class="container">
+        <h3 class="mt-5 mb-4">Recent Feedbacks</h3>
+        <div class="row">
+            {% for feedback in feedbacks %}
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ feedback.username }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ feedback.email }}</h6>
+                        <p class="card-text">{{ feedback.message }}</p>
+                        <p class="card-text">Rating: {{ feedback.rating }}</p>
+                        <p class="card-text"><small class="text-muted">Created at: {{ feedback.created_at }}</small></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer class=" bg-secondary text-light">
+
+        <br>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <div class="wow fadeInUp footer-copyright">
+                <p>
+                  Copyright &copy; Online Examination System - 2024 </p><br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
 
  
-  ul{
-            list-style: none;
-            /* background: #22438c; */
-        }
-        ul li{
-            display: inline-block;
-            position: relative;
-        }
-        ul li a{
-            display: block;
-            padding: 20px 25px;
-            color: #fff;
-            text-decoration: none;
-            text-align: center;
-            font-size: 20px;
-        }
-        ul li ul.dropdown li{
-            display: block;
-
-        }
-        ul li ul.dropdown{
-            width: 100%;
-            background: #071627;
-            /* background: #22438c; */
-            color: white;
-            position: absolute;
-            z-index: 999;
-            display: none;
-            /* margin-right: 200px; */
-        }
-        ul li a{
-          /* text-align: center; */
-          margin-right: 20px;
-        }
-        ul li a:hover{
-          color: #d2d2d2;
-            /* background: #112c66; */
-        }
-        ul li:hover ul.dropdown{
-            display: block;
-        }
-        a:hover{
-          text-decoration: none;
-        }
-  </style>
-</head>
-
-<body>
-
-
-
-  <div class="bs-example">
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #212529; height: 4em;">
-    <a style="color: #ffffff;text-decoration: none; " href="/"><font face = "verdana" size =" 5">Online Examination</font><br /></a>  
-      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-        <div class="navbar-nav">
-        </div>
-
-
-
-        <ul>
-          <li><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'teacher:loginadmin' %}">Teacher</a></li>
-          <li>
-            <a href="#">Student</a>
-            <ul class="dropdown">
-              <li><a href="{% url 'student:student_login' %}">Login</a></li>
-              <li><a href="{% url 'student:student_registration' %}">Register</a></li>
-            </ul>
-          </li>
-          <li><a href="{% url 'contact:contact_us' %}">Contact Us</a></li>
-          <li><a href="{% url 'contact:feedback' %}">Feedback</a></li>
-          <li><a href="{% url 'admin:login' %}">Admin</a></li>
-      </ul>
-
-
-
-
-      </div>
-    </nav>
-  </div>
-
-
-</body>
-
-</html>
-
-<br>
-<section id="section-jumbotron" class="jumbotron jumbotron-fluid d-flex justify-content-center align-items-center">
-  <div class="container text-center">
-    <h2 class="display-3 text-info">Online Examination System</h2>
-    <p class="display-4 d-none d-sm-block">Attend your examinations online!</p>
-    <p class="lead">Sign Up now to start your first online examination</p>
-
-  
-    <p><strong> Start Your Journey Here:</strong></p>
-    <a href="{% url 'student:student_registration' %}" class="btn btn-lg btn-info" style="padding-right: 35px; border-radius: 0%;"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Sign Up as Student</a>
-    
-    <br><br><br>
-  </div>  
-</section>
-  <!DOCTYPE html>
-<html>
-
-<head>
-
-
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
-  <style>
-    /*---------------------------------------
-   Social section
------------------------------------------*/
-    footer {
-      padding: 0px 0px 0px 0px;
-      background-color: #212529;
-      margin: 0px;
-    }
-
-    .fa {
-      padding: 20px;
-      font-size: 23px;
-      width: 60px;
-      text-align: center;
-      text-decoration: none;
-      margin: 5px 2px;
-      border-radius: 50%;
-    }
-
-    .fa:hover {
-      opacity: 0.5;
-      text-decoration: none;
-    }
-
-
-
-    p {
-      text-align: center;
-
-    }
-  </style>
-</head>
-
-<footer class=" bg-secondary text-light">
-
-  <br>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <div class="wow fadeInUp footer-copyright">
-          <p>
-            Copyright &copy; Online Examination System - 2024 </p><br>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-</div>
-  
-
-</html>
-
-
 
 </body>
 

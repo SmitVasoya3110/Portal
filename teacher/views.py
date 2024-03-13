@@ -22,7 +22,11 @@ def loginAdmin(request):
     return render(request, 'teacher/teacher_login.html', context)
 
 def home(request):
-    teacher = Teacher.objects.get(user=request.user)
+    print(request.user)
+    try:
+        teacher = Teacher.objects.get(user=request.user)
+    except Exception as e:
+        return redirect(reverse(home))
     college = teacher.college
     # college_count = college_list.count()
     total_students = Student.objects.filter(college=college).count()

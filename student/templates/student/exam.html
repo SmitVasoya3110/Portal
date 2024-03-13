@@ -89,7 +89,7 @@
       </div>
       <div class="text-center">
 
-        <a href="{% url 'student:result' %}" class="btn btn-success toResult disabled">End Exam</a>
+        <a href="{% url 'student:result' exam_id %}" class="btn btn-success toResult disabled">End Exam</a>
       </div>
       {% else %}
       <h3>No Qustions</h3>
@@ -122,7 +122,8 @@ function clock() {
         document.getElementById('timer').innerHTML = minutes + ":" + seconds
         if (c == 0) {
           clearInterval(myTimer);
-          window.location.href = 'http://127.0.0.1:8000/result/'
+          let exam_id = "{{ exam_id }}"
+          window.location.href = `http://127.0.0.1:8000/result/${exam_id}`
         }
     }
 }
@@ -141,7 +142,7 @@ clock();
       $(this).html('Answer Submited.....');
 
     }
-    document.getElementById('submitted').innerHTML = 'Answer Submited'
+    document.getElementById('submitted').innerHTML = 'Answer Submited';
     //var submitans = document.getElementById('')
     saveans(id,ans);
     answeredQuestions.push(id);
