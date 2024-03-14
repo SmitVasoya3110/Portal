@@ -55,37 +55,37 @@ class ContactUsAdmin(admin.ModelAdmin):
 
         super(ContactUsAdmin, self).save_related(request, form, formsets, change)
 
-@admin.register(AdminReply)
-class AdminReplyAdmin(admin.ModelAdmin):
-    list_display = ('contact_us', 'admin_user', 'timestamp')
-    list_filter = ('timestamp',)
-    search_fields = ('contact_us__email', 'admin_user__email')
-    form = AdminReplyForm
+# @admin.register(AdminReply)
+# class AdminReplyAdmin(admin.ModelAdmin):
+#     list_display = ('contact_us', 'admin_user', 'timestamp')
+#     list_filter = ('timestamp',)
+#     search_fields = ('contact_us__email', 'admin_user__email')
+#     form = AdminReplyForm
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        form.current_user = request.user
-        return form
+#     def get_form(self, request, obj=None, **kwargs):
+#         form = super().get_form(request, obj, **kwargs)
+#         form.current_user = request.user
+#         return form
 
-    def save_model(self, request, obj, form, change):
-        # Set admin_user to the current logged-in admin (if authenticated)
-        if request.user and request.user.is_authenticated and not obj.admin_user:
-            obj.admin_user = request.user
-        else:
-            # Handle the case where request.user is None or not authenticated
-            # For example, you might want to raise an exception or log a warning
-            raise ValueError("Cannot save AdminReply without a valid admin_user")
+#     def save_model(self, request, obj, form, change):
+#         # Set admin_user to the current logged-in admin (if authenticated)
+#         if request.user and request.user.is_authenticated and not obj.admin_user:
+#             obj.admin_user = request.user
+#         else:
+#             # Handle the case where request.user is None or not authenticated
+#             # For example, you might want to raise an exception or log a warning
+#             raise ValueError("Cannot save AdminReply without a valid admin_user")
 
-        obj.save()
+#         obj.save()
 
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
+#     def save_related(self, request, form, formsets, change):
+#         super().save_related(request, form, formsets, change)
 
-        # Ensure the contact_us instance is saved with replied set to True
-        contact_us_instance = form.instance.contact_us
-        if contact_us_instance:
-            contact_us_instance.replied = True
-            contact_us_instance.save()
+#         # Ensure the contact_us instance is saved with replied set to True
+#         contact_us_instance = form.instance.contact_us
+#         if contact_us_instance:
+#             contact_us_instance.replied = True
+#             contact_us_instance.save()
     
     # def save_formset(self, request, form, formset, change):
     #     instances = formset.save(commit=False)

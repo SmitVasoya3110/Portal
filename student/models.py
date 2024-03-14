@@ -2,10 +2,19 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
-from pytz import timezone
-
+from django.utils import timezone
+from django.contrib.postgres.fields import CICharField
+from django.db.models.functions import Lower
 from .managers import CustomUserManager
 
+class CaseInsensitiveCharField(models.CharField):
+    def get_prep_value(self, value):
+        value = super().get_prep_value(value)
+        return value.lower() if value else value
+
+    # def get_db_prep_value(self, value, connection, prepared=False):
+    #     value = super().get_db_prep_value(value, connection, prepared)
+    #     return connection.ops.prep_for_like_query(value)
 
 class CustomUser(AbstractUser):
     username = None
@@ -14,6 +23,7 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=30)
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
+    last_login = models.DateTimeField(default=timezone.now)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -23,7 +33,7 @@ class CustomUser(AbstractUser):
         return self.email
     
 class College(models.Model):
-    clg_name = models.CharField(max_length=300)
+    clg_name = CaseInsensitiveCharField(max_length=300, unique=True)
     address = models.TextField()
 
     def __str__(self):

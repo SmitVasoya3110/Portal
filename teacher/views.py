@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from student.models import Record, Student, College, Exam, Question, Choice, ExamResult
 from teacher.forms import ChoiceForm, ChoiceFormSet, QuestionForm
 from teacher.models import Teacher
+from django.utils import timezone
 
 # Create your views here.
 def loginAdmin(request):
@@ -16,6 +17,10 @@ def loginAdmin(request):
         print(user)
         if user:
             login(request, user)
+            user.last_login = timezone.now()
+            teacher = Teacher.objects.get(user=user)
+            teacher.last_login = user.last_login
+            teacher.save()
             return redirect(reverse('teacher:adminhome'))
 
     context= {'auth_form':auth_form}
