@@ -61,7 +61,9 @@ class Question(models.Model):
     question_text = models.TextField()
     category = models.CharField(max_length=30, choices=CATEGORY, default="None")
 
-
+    class Meta:
+        unique_together = ('question_text', 'exam')
+        
     def __str__(self):
         return self.question_text
     

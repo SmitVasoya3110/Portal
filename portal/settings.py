@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 INSTALLED_APPS = [
-    'jazzmin',
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

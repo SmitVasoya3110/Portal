@@ -1,6 +1,10 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.forms import ValidationError
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from .models import CustomUser, Student, College, Exam, ExamResult, Question, Choice, Record
 from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext as _
 
 # Register your models here.
 admin.site.site_header = "Portal Admin"
@@ -35,7 +39,7 @@ class ExamResultAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False
     def has_change_permission(self, request, obj=None):
-        return True
+        return False
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -49,6 +53,7 @@ class ExamnAdmin(admin.ModelAdmin):
 class QuestionAdmin(admin.ModelAdmin):
     list_display =  ('question_text', 'exam', 'category')
     # search_fields = ['question_text', 'exam', 'category']
+    
 
 admin.site.register(Exam, ExamnAdmin)
 admin.site.register(ExamResult, ExamResultAdmin)
