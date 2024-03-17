@@ -33,14 +33,14 @@ class UserCreationForm(UserCreationForm):
 class StudentCreationForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ('college', 'enrollment_id', 'branch')
+        fields = ('college', 'branch')
         
     
-    def clean_enrollment_id(self):
-        enrollment_id = self.cleaned_data.get('enrollment_id')
-        if not enrollment_id.isdigit():
-            raise ValidationError("Student ID must be a number.")
-        return enrollment_id
+    # def clean_enrollment_id(self):
+    #     enrollment_id = self.cleaned_data.get('enrollment_id')
+    #     if not enrollment_id.isdigit():
+    #         raise ValidationError("Student ID must be a number.")
+    #     return enrollment_id
     
     def save(self, user, commit=True):
         print(type(user))
@@ -53,7 +53,6 @@ class StudentCreationForm(forms.ModelForm):
         student = Student.objects.create(
             user=user,
             college=self.cleaned_data['college'],
-            enrollment_id=self.cleaned_data['enrollment_id'],
             branch=self.cleaned_data['branch'],
         )
 

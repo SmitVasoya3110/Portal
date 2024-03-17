@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import IntegrityError
 from contact.models import Feedback
-from student.models import Exam, Choice, ExamResult, Question, Record, Student
+from student.models import CustomUser,Exam, Choice, ExamResult, Question, Record, Student
 from .forms import UserCreationForm, StudentCreationForm, StudentLoginForm
 
 global question_list
@@ -59,38 +59,47 @@ def student_login(request):
 
     return render(request, 'student/student_login.html', {'form': form})
 
-@login_required(login_url='student:login')
+@login_required(login_url='/student/login')
 def student_dashboard(request):
-    student = request.user.student
-    college = student.college
+    print(request.user)
+    try:
+        student = request.user.student
+        college = student.college
 
-    # Get upcoming exams in the next 30 minutes
-    upcoming_exams = Exam.objects.filter(
-        college=college,
-        # start_time__gte=timezone.now(),
-        # start_time__lte=timezone.now() + timezone.timedelta(minutes=30)
-    ).order_by('start_time')
+        # Get upcoming exams in the next 30 minutes
+        upcoming_exams = Exam.objects.filter(
+            college=college,
+            # start_time__gte=timezone.now(),
+            # start_time__lte=timezone.now() + timezone.timedelta(minutes=30)
+        ).order_by('start_time')
 
-    context = {
-        'student': student,
-        'college': college,
-        'upcoming_exams': upcoming_exams,
-    } 
-    if request.method == "POST":
-        print(request.POST) 
-        print(end="================================================" )
-        form_exam = request.POST['exam']
-        exam = Exam.objects.get(id=form_exam)
         context = {
-        'student': student,
-        'college': college,
-        'exam': exam,
-        }
-        return render(request, 'student/instruction.html', context)
-    return render(request, 'student/student_dashboard.html', context)
+            'student': student,
+            'college': college,
+            'upcoming_exams': upcoming_exams,
+        } 
+        if request.method == "POST":
+            print(request.POST) 
+            print(end="================================================" )
+            form_exam = request.POST['exam']
+            exam = Exam.objects.get(id=form_exam)
+            context = {
+            'student': student,
+            'college': college,
+            'exam': exam,
+            }
+            return render(request, 'student/instruction.html', context)
+        return render(request, 'student/student_dashboard.html', context)
+    except CustomUser.DoesNotExist:
+        messages.error(request, "Student does not exists!")
+        logout(request)
+        return redirect("student:student_login")
+    except Student.DoesNotExist:
+        messages.error(request, "Student does not exists!")
+        logout(request)
+        return redirect("student:student_login")
 
-
-
+@login_required(login_url='/student/login')
 def exam(request, id):
     try:
         questions = Question.objects.filter(exam__id=id)
@@ -118,7 +127,7 @@ def exam(request, id):
         print(e)
         return redirect('home')
 
-    
+@login_required(login_url='/student/login')    
 def saveans(request):
     print("Save Ans is Called")
     print(request.GET)
@@ -128,6 +137,7 @@ def saveans(request):
     Record.objects.filter(question_id=question_id, exam_id=exam_id, student_id=request.user.id).update(answer=answer)
     return JsonResponse({"message":"Record added"})
 
+@login_required(login_url='/student/login')
 def result(request,id):
     score = 0
     global question_list
@@ -147,7 +157,8 @@ def result(request,id):
     student = Student.objects.get(user=request.user)
     exam_result = ExamResult.objects.create(user=request.user, student=student, exam=exam, score=score)
     return render(request, 'student/result.html', {'score':score})
-
+    
+@login_required(login_url='/student/login')
 def signout(request):
     logout(request)
     return redirect('student:login')

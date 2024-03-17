@@ -8,7 +8,7 @@ from teacher.forms import ChoiceForm, ChoiceFormSet, QuestionForm, TeacherPasswo
 from teacher.models import Teacher
 from django.utils import timezone
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def loginAdmin(request):
     auth_form = AuthenticationForm()
@@ -26,12 +26,13 @@ def loginAdmin(request):
                 teacher.save()
                 return redirect(reverse('teacher:adminhome'))
             else:
-                messages.error(request, "Teacher is not registered with us!")
+                messages.error(request, "Invalid Credentials!")
         return render(request, 'teacher/teacher_login.html', context)
     except Teacher.DoesNotExist:
         messages.error(request, "Teacher is not registered with us!")
         return render(request, 'teacher/teacher_login.html', context)
     
+@login_required(login_url='/teacher/portal/login')
 def home(request):
     print(request.user)
     try:
@@ -53,11 +54,13 @@ def home(request):
         messages.error(request, "Please Login again to proceed")
         return redirect('teacher:loginadmin')
     
+@login_required(login_url='/teacher/portal/login')   
 def fetchStudents(request, id):
     students = Student.objects.filter(college=id)
     context = {'students':students}
     return render(request, 'teacher/studentlist.html', context)
 
+@login_required(login_url='/teacher/portal/login')
 def allStudents(request):
     try:
 
@@ -70,6 +73,7 @@ def allStudents(request):
         messages.error(request, "Please Login again to proceed")
         return redirect('teacher:loginadmin')
     
+@login_required(login_url='/teacher/portal/login')
 def fetchExams(request):
     try:
         teacher = Teacher.objects.get(user=request.user)
@@ -81,6 +85,7 @@ def fetchExams(request):
         messages.error(request, "Please Login again to proceed")
         return redirect('teacher:loginadmin')
     
+@login_required(login_url='/teacher/portal/login')    
 def examInfo(request, id):
     question_list = Question.objects.filter(exam=id)
     option_list = []
@@ -103,6 +108,7 @@ def examInfo(request, id):
     context = {'question_list':question_list, 'option_list':option_list, 'exam_id':id}
     return render(request, 'teacher/exam_info.html', context)
 
+@login_required(login_url='/teacher/portal/login')
 def studentrecord(request,exam_id, college_id):
     students = Student.objects.filter(college=college_id)
     exam = Exam.objects.get(id=exam_id)
@@ -121,6 +127,7 @@ def studentrecord(request,exam_id, college_id):
     context={'students':students, 'score_list':score_list, 'exam':exam}
     return render(request, 'teacher/studentrecord.html', context)
 
+@login_required(login_url='/teacher/portal/login')
 def editQuestion(request, exam_id, q_id):
      # Get the exam instance
     try:
@@ -162,7 +169,8 @@ def editQuestion(request, exam_id, q_id):
     except Exception as e:
         messages.error("Internal Server Error")
         return redirect('teacher:"college_exam')
-    
+
+@login_required(login_url='/teacher/portal/login')
 def deleteQuestion(request, exam_id, q_id):
      # Get the exam instance
     try:
@@ -223,7 +231,7 @@ def deleteQuestion(request, exam_id, q_id):
 #     context = {'question_form':question_form, 'option_form':option_form}
 #     return render(request, 'adminapp/update_question.html', context)
 
-
+@login_required(login_url='/teacher/portal/login')
 def addQuestion(request, id):
     try:
         exam = Exam.objects.get(id=id)
@@ -272,7 +280,7 @@ def addQuestion(request, id):
 #     choice_formset = ChoiceFormSet(instance=Question())
 #     context = {'question_form':question_form}
 #     return render(request, 'teacher/add_question.html', context)
-
+@login_required(login_url='/teacher/portal/login')
 def addOption(request, id):
     if request.method == 'POST':
         choices = ChoiceFormSet(request.POST)
@@ -282,6 +290,7 @@ def addOption(request, id):
     else:
         return HttpResponse("It only can be seen after adding new questions")
 
+@login_required(login_url='/teacher/portal/login')
 def update_teacher_details(request):
     try:
         
@@ -305,7 +314,8 @@ def update_teacher_details(request):
     except Teacher.DoesNotExist:
         messages.error(request, "Please Login again to proceed")
         return redirect('teacher:loginadmin')
-    
+
+@login_required(login_url='/teacher/portal/login')    
 def logoutAdmin(request):
     logout(request)
     return redirect('/')

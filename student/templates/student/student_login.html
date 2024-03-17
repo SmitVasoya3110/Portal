@@ -31,11 +31,24 @@
             {% csrf_token %}
             {{ form|crispy }}
             <div class="text-center"><button type="submit" class="btn btn-info btn-md">Login</button></div>
-        </form>
+    </form>
         <div class="mt-2">
             <div class="d-flex justify-content-center links">
                 Don't have an account? <a href="{% url 'student:student_registration' %}" class="ml-2">Sign Up</a>
             </div>
         </div>
-    </div>
+        <div class="mt-1">
+            <div class="d-flex justify-content-center links">
+                <a href='{% url "home" %}'> Back to Home </a>
+            </div>
+        </div>
+        {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+        {% endfor %}
+</div>
 {% endblock %}

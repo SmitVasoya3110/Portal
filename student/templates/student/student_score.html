@@ -43,6 +43,7 @@
 
 <body>
     <div class="container">
+        <a href='{% url "home" %}'> Back to Home </a>
         {% for message in messages %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             Student with the email does not exists
