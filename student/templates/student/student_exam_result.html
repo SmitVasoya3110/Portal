@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Exam Result</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #343a40;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Student Details</h1>
+        <p>Name: {{ student.user.get_full_name }}</p>
+        <p>Enrollment ID: {{ student.enrollment_id }}</p>
+        <p>College: {{ student.college.clg_name }}</p>
+        
+        <h1 class="mt-5">All Exam Results</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Exam Title</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam_result in exam_results %}
+                    <tr>
+                        <td>{{ exam_result.exam.title }}</td>
+                        <td>{{ exam_result.exam.start_time }}</td>
+                        <td>{{ exam_result.exam.end_time }}</td>
+                        <td>{{ exam_result.score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

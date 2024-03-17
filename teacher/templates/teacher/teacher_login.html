@@ -75,7 +75,15 @@
     <div class="d-flex justify-content-center h-100">
         <div class="user_card">
             <div class="d-flex justify-content-center">
-
+                
+                {% comment %} {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %} {% endcomment %}
 
                 <h3 id="form-title">Teacher Portal</h3>
             </div>
@@ -98,9 +106,9 @@
             {% for message in messages %}
                 <p id="messages">{{ message }}</p>
             {% endfor %}
-                <div class="d-flex justify-content-center links">
+                {% comment %} <div class="d-flex justify-content-center links">
                     Forgot Password? <a href="/reset_password" class="ml-2">Reset Password</a>
-                </div>
+                </div> {% endcomment %}
         
             </div>
         </div>

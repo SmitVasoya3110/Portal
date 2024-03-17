@@ -30,6 +30,14 @@
 
 {% block content %}
 <div class="container">
+  {% for message in messages %}
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      {{ message }}
+  </div>
+  {% endfor %}
     <div class="colleges col-md-10 my-4 offset-md-1 shadow-lg bg-white rounded align-middle"><h3 class="head text-center text-muted align-middle">Exam</h3></div>
     <table class="table table-striped">
         <thead>

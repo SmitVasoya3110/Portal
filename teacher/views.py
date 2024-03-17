@@ -12,59 +12,75 @@ from django.contrib import messages
 # Create your views here.
 def loginAdmin(request):
     auth_form = AuthenticationForm()
-    if request.method == "POST":
-        print(request.POST)
-        user = authenticate(request, email = request.POST['username'], password=request.POST['password'])
-        print(user)
-        if user:
-            login(request, user)
-            user.last_login = timezone.now()
-            teacher = Teacher.objects.get(user=user)
-            teacher.last_login = user.last_login
-            teacher.save()
-            return redirect(reverse('teacher:adminhome'))
-
     context= {'auth_form':auth_form}
-    return render(request, 'teacher/teacher_login.html', context)
-
+    try:
+        if request.method == "POST":
+            print(request.POST)
+            user = authenticate(request, email = request.POST['username'], password=request.POST['password'])
+            print(user)
+            if user:
+                login(request, user)
+                user.last_login = timezone.now()
+                teacher = Teacher.objects.get(user=user)
+                teacher.last_login = user.last_login
+                teacher.save()
+                return redirect(reverse('teacher:adminhome'))
+            else:
+                messages.error(request, "Teacher is not registered with us!")
+        return render(request, 'teacher/teacher_login.html', context)
+    except Teacher.DoesNotExist:
+        messages.error(request, "Teacher is not registered with us!")
+        return render(request, 'teacher/teacher_login.html', context)
+    
 def home(request):
     print(request.user)
     try:
         teacher = Teacher.objects.get(user=request.user)
-    except Exception as e:
-        return redirect(reverse(home))
-    college = teacher.college
-    # college_count = college_list.count()
-    total_students = Student.objects.filter(college=college).count()
-    total_exams = Exam.objects.filter(college=college).count()
-    print(total_exams, total_students, college)
-    context = {
-        'college' : college,
-        'student_count' : total_students,
-        'exam_count' : total_exams,
-        'college_list': [college]
-    }
-    return render(request, 'teacher/dashboard.html', context)
-
+    
+        college = teacher.college
+        # college_count = college_list.count()
+        total_students = Student.objects.filter(college=college).count()
+        total_exams = Exam.objects.filter(college=college).count()
+        print(total_exams, total_students, college)
+        context = {
+            'college' : college,
+            'student_count' : total_students,
+            'exam_count' : total_exams,
+            'college_list': [college]
+        }
+        return render(request, 'teacher/dashboard.html', context)
+    except Teacher.DoesNotExist:
+        messages.error(request, "Please Login again to proceed")
+        return redirect('teacher:loginadmin')
+    
 def fetchStudents(request, id):
     students = Student.objects.filter(college=id)
     context = {'students':students}
     return render(request, 'teacher/studentlist.html', context)
 
 def allStudents(request):
-    teacher = Teacher.objects.get(user=request.user)
-    all_students = Student.objects.filter(college=teacher.college)
+    try:
 
-    context = {'students':all_students}
-    return render(request, 'teacher/studentlist.html', context)
+        teacher = Teacher.objects.get(user=request.user)
+        all_students = Student.objects.filter(college=teacher.college)
 
+        context = {'students':all_students}
+        return render(request, 'teacher/studentlist.html', context)
+    except Teacher.DoesNotExist:
+        messages.error(request, "Please Login again to proceed")
+        return redirect('teacher:loginadmin')
+    
 def fetchExams(request):
-    teacher = Teacher.objects.get(user=request.user)
-    exam_list = Exam.objects.filter(college=teacher.college)
-    context = {'exam_list':exam_list}
-    print(context)
-    return render(request, 'teacher/college_exam.html', context)
-
+    try:
+        teacher = Teacher.objects.get(user=request.user)
+        exam_list = Exam.objects.filter(college=teacher.college)
+        context = {'exam_list':exam_list}
+        print(context)
+        return render(request, 'teacher/college_exam.html', context)
+    except Teacher.DoesNotExist:
+        messages.error(request, "Please Login again to proceed")
+        return redirect('teacher:loginadmin')
+    
 def examInfo(request, id):
     question_list = Question.objects.filter(exam=id)
     option_list = []
@@ -107,36 +123,46 @@ def studentrecord(request,exam_id, college_id):
 
 def editQuestion(request, exam_id, q_id):
      # Get the exam instance
-    exam = get_object_or_404(Exam, pk=exam_id)
+    try:
+        exam = get_object_or_404(Exam, pk=exam_id)
 
-    # Get the question instance
-    question = get_object_or_404(Question, pk=q_id, exam=exam)
+        # Get the question instance
+        question = get_object_or_404(Question, pk=q_id, exam=exam)
 
-    if request.method == 'POST':
-        question_form = QuestionForm(request.POST, instance=question)
-        choice_formset = ChoiceFormSet(request.POST, instance=question)
+        if request.method == 'POST':
+            question_form = QuestionForm(request.POST, instance=question)
+            choice_formset = ChoiceFormSet(request.POST, instance=question)
 
-        if question_form.is_valid() and choice_formset.is_valid():
-            question = question_form.save()
-            choices = choice_formset.save(commit=False)
-            
-            for choice in choices:
-                choice.question = question
-                choice.save()
+            if question_form.is_valid() and choice_formset.is_valid():
+                question = question_form.save()
+                choices = choice_formset.save(commit=False)
+                
+                for choice in choices:
+                    choice.question = question
+                    choice.save()
 
-            return redirect('teacher:exam-info',id=exam_id)  # Redirect to a success page
+                return redirect('teacher:exam-info',id=exam_id)  # Redirect to a success page
 
-    else:
-        question_form = QuestionForm(instance=question)
-        choice_formset = ChoiceFormSet(instance=question)
-    context = {
-        'question_form': question_form,
-        'choice_form': choice_formset,
-        'exam': exam,
-        'question': question
-    }   
-    return render(request, 'teacher/update_question.html', context)
-
+        else:
+            question_form = QuestionForm(instance=question)
+            choice_formset = ChoiceFormSet(instance=question)
+        context = {
+            'question_form': question_form,
+            'choice_form': choice_formset,
+            'exam': exam,
+            'question': question
+        }   
+        return render(request, 'teacher/update_question.html', context)
+    except Exam.DoesNotExist:
+        messages.error("The Exam is not found!")
+        return redirect('teacher:"college_exam')
+    except Question.DoesNotExist:
+        messages.error("The Question does not exists")
+        return redirect('teacher:exam-info',id=exam_id)
+    except Exception as e:
+        messages.error("Internal Server Error")
+        return redirect('teacher:"college_exam')
+    
 def deleteQuestion(request, exam_id, q_id):
      # Get the exam instance
     try:
@@ -149,7 +175,7 @@ def deleteQuestion(request, exam_id, q_id):
 
         return  redirect(reverse('teacher:exam-info',kwargs={'id' : exam_id}))
     except Question.DoesNotExist:
-        message = messages.error(request, "Question Not Found")
+        messages.error(request, "Question Not Found")
         return redirect(reverse('teacher:exam-info',kwargs={'id' : exam_id}))
     except Exception as e:
         print(e)
@@ -199,28 +225,36 @@ def deleteQuestion(request, exam_id, q_id):
 
 
 def addQuestion(request, id):
-    exam = Exam.objects.get(id=id)
-    if request.method == 'POST':
-        question_form = QuestionForm(request.POST)
-        choice_formset = ChoiceFormSet(request.POST, instance=Question())
+    try:
+        exam = Exam.objects.get(id=id)
+        if request.method == 'POST':
+            question_form = QuestionForm(request.POST)
+            choice_formset = ChoiceFormSet(request.POST, instance=Question())
 
-        if question_form.is_valid() and choice_formset.is_valid():
-            # Save the question form
-            question = question_form.save()
+            if question_form.is_valid() and choice_formset.is_valid():
+                # Save the question form
+                question = question_form.save()
 
-            # Save the choice formset with the question instance
-            choices = choice_formset.save(commit=False)
-            for choice in choices:
-                choice.question = question
-                choice.save()
+                # Save the choice formset with the question instance
+                choices = choice_formset.save(commit=False)
+                for choice in choices:
+                    choice.question = question
+                    choice.save()
 
-            return redirect('teacher:exam-info',id=id)  # Redirect to a success page
+                return redirect('teacher:exam-info',id=id)  # Redirect to a success page
 
-    else:
-        question_form = QuestionForm(initial={'exam':exam})
-        choice_formset = ChoiceFormSet(instance=Question())
+        else:
+            question_form = QuestionForm(initial={'exam':exam})
+            choice_formset = ChoiceFormSet(instance=Question())
 
-    return render(request, 'teacher/add_question.html', {'question_form': question_form, 'choice_formset': choice_formset})
+        return render(request, 'teacher/add_question.html', {'question_form': question_form, 'choice_formset': choice_formset})
+    except Exam.DoesNotExist:
+        messages.error("The Exam is not found!")
+        return redirect('teacher:"college_exam')
+    except Exception as e:
+        print(e)
+        messages.error("Internal Server Error!")
+        return  redirect('teacher:"college_exam')
 # def addQuestion(request, id):
 #     exam = Exam.objects.get(id=id)
 #     question_form = QuestionForm(initial={'exam':exam})
@@ -249,24 +283,29 @@ def addOption(request, id):
         return HttpResponse("It only can be seen after adding new questions")
 
 def update_teacher_details(request):
-    teacher = Teacher.objects.get(user=request.user)  # Assuming the user is logged in and associated with a teacher profile
-    if request.method == 'POST':
-        if 'update_details' in request.POST:
-            details_form = TeacherUpdateForm(request.POST, instance=teacher)
-            if details_form.is_valid():
-                details_form.save()
-                return redirect('teacher:adminhome')  # Redirect to teacher panel after successful update
-        elif 'change_password' in request.POST:
-            password_form = TeacherPasswordChangeForm(request.user, request.POST)
-            if password_form.is_valid():
-                password_form.save()
-                update_session_auth_hash(request, password_form.user)
-                return redirect('teacher:adminhome')  # Redirect to teacher panel after successful password change
-    else:
-        details_form = TeacherUpdateForm(instance=teacher)
-        password_form = TeacherPasswordChangeForm(request.user)
-    return render(request, 'teacher/update_teacher.html', {'details_form': details_form, 'password_form': password_form, 'teacher': teacher})
-
+    try:
+        
+        teacher = Teacher.objects.get(user=request.user)  # Assuming the user is logged in and associated with a teacher profile
+        if request.method == 'POST':
+            if 'update_details' in request.POST:
+                details_form = TeacherUpdateForm(request.POST, instance=teacher)
+                if details_form.is_valid():
+                    details_form.save()
+                    return redirect('teacher:adminhome')  # Redirect to teacher panel after successful update
+            elif 'change_password' in request.POST:
+                password_form = TeacherPasswordChangeForm(request.user, request.POST)
+                if password_form.is_valid():
+                    password_form.save()
+                    update_session_auth_hash(request, password_form.user)
+                    return redirect('teacher:adminhome')  # Redirect to teacher panel after successful password change
+        else:
+            details_form = TeacherUpdateForm(instance=teacher)
+            password_form = TeacherPasswordChangeForm(request.user)
+        return render(request, 'teacher/update_teacher.html', {'details_form': details_form, 'password_form': password_form, 'teacher': teacher})
+    except Teacher.DoesNotExist:
+        messages.error(request, "Please Login again to proceed")
+        return redirect('teacher:loginadmin')
+    
 def logoutAdmin(request):
     logout(request)
     return redirect('/')

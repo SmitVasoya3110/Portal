@@ -147,8 +147,10 @@
             <li>
               <a href="#">Student</a>
               <ul class="dropdown">
-                <li><a href="{% url 'student:student_login' %}">Login</a></li>
+                <li><a href="{% url 'student:results' %}">Results</a></li>
                 <li><a href="{% url 'student:student_registration' %}">Register</a></li>
+                <li><a href="{% url 'student:student_login' %}">Login</a></li>
+
               </ul>
             </li>
             <li><a href="{% url 'contact:contact_us' %}">Contact Us</a></li>

@@ -14,13 +14,14 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     ordering = ('email',)
     list_display = ('email', 'first_name', 'last_name', 'is_teacher', 'is_superuser')
+    exclude = ('last_login',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal Info', {'fields': ('first_name', 'last_name')}),
         ('Permissions', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Important dates', {'fields': ('date_joined',)}),
     )
     add_fieldsets = (
         (None, {

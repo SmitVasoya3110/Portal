@@ -152,6 +152,22 @@ def signout(request):
     logout(request)
     return redirect('student:login')
 
+def enrollment_form(request):
+    if request.method == 'POST':
+        enrollment_id = request.POST.get('enrollment_id')
+        return redirect('student:view_student_details', enrollment_id=enrollment_id)
+    return render(request, 'student/student_score.html')
+
+def view_student_details(request, enrollment_id):
+    try:
+        student = Student.objects.get(user__email=enrollment_id)
+        exam_results = ExamResult.objects.filter(student=student)
+        
+        return render(request, 'student/student_exam_result.html', {'student': student, 'exam_results': exam_results})
+    except Student.DoesNotExist:
+        messages.error(request,"student with the given email not found!")
+        return redirect('student:results')
+
 
 def landing_page(request):
     feedbacks = Feedback.objects.all().order_by('-created_at')[:5]  # Change 5 to the desired number of feedbacks
