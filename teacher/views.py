@@ -1,12 +1,13 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
 from student.models import Record, Student, College, Exam, Question, Choice, ExamResult
-from teacher.forms import ChoiceForm, ChoiceFormSet, QuestionForm
+from teacher.forms import ChoiceForm, ChoiceFormSet, QuestionForm, TeacherPasswordChangeForm, TeacherUpdateForm
 from teacher.models import Teacher
 from django.utils import timezone
+from django.contrib import messages
 
 # Create your views here.
 def loginAdmin(request):
@@ -133,7 +134,7 @@ def editQuestion(request, exam_id, q_id):
         'choice_form': choice_formset,
         'exam': exam,
         'question': question
-    }
+    }   
     return render(request, 'teacher/update_question.html', context)
 
 def deleteQuestion(request, exam_id, q_id):
@@ -146,10 +147,14 @@ def deleteQuestion(request, exam_id, q_id):
 
         question.delete()
 
-        return  redirect(reverse('teacher:edit-question',kwargs={'exam_id' : exam_id, 'q_id':q_id}))
+        return  redirect(reverse('teacher:exam-info',kwargs={'id' : exam_id}))
+    except Question.DoesNotExist:
+        message = messages.error(request, "Question Not Found")
+        return redirect(reverse('teacher:exam-info',kwargs={'id' : exam_id}))
     except Exception as e:
         print(e)
-        return JsonResponse({"message":"Unable to delete"})
+        return  redirect(reverse('teacher:exam-info',kwargs={'id' : exam_id}))
+
     # if request.method == 'POST':
     #     question_form = QuestionForm(request.POST, instance=question)
     #     choice_formset = ChoiceFormSet(request.POST, instance=question)
@@ -242,6 +247,25 @@ def addOption(request, id):
         return redirect('adminapp:exam-info',id=id)
     else:
         return HttpResponse("It only can be seen after adding new questions")
+
+def update_teacher_details(request):
+    teacher = Teacher.objects.get(user=request.user)  # Assuming the user is logged in and associated with a teacher profile
+    if request.method == 'POST':
+        if 'update_details' in request.POST:
+            details_form = TeacherUpdateForm(request.POST, instance=teacher)
+            if details_form.is_valid():
+                details_form.save()
+                return redirect('teacher:adminhome')  # Redirect to teacher panel after successful update
+        elif 'change_password' in request.POST:
+            password_form = TeacherPasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                password_form.save()
+                update_session_auth_hash(request, password_form.user)
+                return redirect('teacher:adminhome')  # Redirect to teacher panel after successful password change
+    else:
+        details_form = TeacherUpdateForm(instance=teacher)
+        password_form = TeacherPasswordChangeForm(request.user)
+    return render(request, 'teacher/update_teacher.html', {'details_form': details_form, 'password_form': password_form, 'teacher': teacher})
 
 def logoutAdmin(request):
     logout(request)

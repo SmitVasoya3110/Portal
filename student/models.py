@@ -38,7 +38,20 @@ class College(models.Model):
 
     def __str__(self):
         return self.clg_name
+
+class Branch(models.Model):
+    branch_name = models.CharField(max_length=71)
+    college = models.ForeignKey(College, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('branch_name', 'college')
+
+    def get_branch_name(self):
+        return self.branch_name
     
+    def __str__(self) -> str:
+        return f"{self.branch_name} : {self.college}"
+        
 class Exam(models.Model):
     title = models.CharField(max_length=255)
     college = models.ForeignKey('College', on_delete=models.CASCADE)
@@ -79,11 +92,23 @@ class Choice(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
-    enrollment_id = models.CharField(max_length=100, unique=True)
-    branch = models.CharField(max_length=100)
+    enrollment_id = models.IntegerField(default=1)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        # This means that the model isn't saved to the database yet
+        if self._state.adding:
+            # Get the maximum display_id value from the database
+            last_id = Student.objects.all().aggregate(largest=models.Max('enrollment_id'))['largest']
+
+            # aggregate can return None! Check it first.
+            # If it isn't none, just use the last ID specified (which should be the greatest) and add one to it
+            if last_id is not None:
+                self.enrollment_id = last_id + 1
+
+        super(Student, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return f"{self.user.email}-{self.user.first_name}-{self.user.last_name}"
 

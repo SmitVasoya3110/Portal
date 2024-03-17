@@ -1,0 +1,36 @@
+{% extends "main.html" %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Teacher Details</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+{% block content %}
+<div class="container mt-5">
+    {% comment %}
+    <h2>Update Teacher Details</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ details_form.as_p }}
+        <button type="submit" name="update_details" class="btn btn-primary">Update Details</button>
+    </form> 
+    <hr>
+    {% endcomment %}
+    <h2>Change Password</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ password_form.as_p }}
+        <button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
+    </form>
+</div>
+<!-- Include Bootstrap JS (optional) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
+
+

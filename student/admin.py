@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.forms import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import CustomUser, Student, College, Exam, ExamResult, Question, Choice, Record
+from .models import Branch, CustomUser, Student, College, Exam, ExamResult, Question, Choice, Record
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext as _
 
@@ -41,7 +41,7 @@ class ExamResultAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -61,3 +61,4 @@ admin.site.register(Question, QuestionAdmin)
 # admin.site.register(Choice)
 # admin.site.register(Record)
 admin.site.register(Student, StudentAdmin)
+admin.site.register(Branch)

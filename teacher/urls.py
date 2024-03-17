@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import (loginAdmin, home, fetchStudents, 
             allStudents, fetchExams, examInfo, studentrecord,
-            editQuestion, addQuestion, logoutAdmin, deleteQuestion
+            editQuestion, addQuestion, logoutAdmin, deleteQuestion, update_teacher_details
 )
 app_name="teacher"
 urlpatterns = [
@@ -16,5 +16,6 @@ urlpatterns = [
     path('edit-question/<int:exam_id>/<int:q_id>', editQuestion, name="edit-question"),
     path('delete-question/<int:exam_id>/<int:q_id>', deleteQuestion, name="delete-question"),
     path('studentrecords/<int:exam_id>/<int:college_id>', studentrecord, name="studentrecords"),
+    path('update/', update_teacher_details, name='update_teacher_details'),
     path('logoutteacher/', logoutAdmin, name="logoutadmin")
 ]

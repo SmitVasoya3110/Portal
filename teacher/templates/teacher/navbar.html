@@ -31,6 +31,7 @@
         margin-right: 3px;
       }
     </style>
-  <span id="user-mg">Hello,{{request.user}}</span>
+  <span id="user-mg">Hello, {{request.user}}</span>
+  <span><a href="{% url 'teacher:update_teacher_details' %}" class="nav-link link-nav">Change Password</a></span>
   <span><a href="{% url 'teacher:logoutadmin' %}" class="nav-link link-nav">Logout</a></span>
 </nav>
