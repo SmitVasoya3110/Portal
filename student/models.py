@@ -130,10 +130,10 @@ class Record(models.Model):
     student_id = models.CharField(max_length=10)
     exam_id = models.CharField(max_length=10)
     question_id = models.CharField(max_length=10)
-    answer = models.CharField(max_length=1, default='N')
+    answer = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return self.question_id + " : "+self.answer + "----Student_ID : " + self.student_id
+        return self.question_id + " : "+ str(self.answer) + "----Student_ID : " + self.student_id
       

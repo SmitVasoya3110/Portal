@@ -116,7 +116,7 @@ def studentrecord(request,exam_id, college_id):
     for student in students:
         score = 0
         # print(student, student.pk)
-        records = Record.objects.filter(exam_id=exam_id,student_id=student.pk).exclude(answer='N').distinct()
+        records = Record.objects.filter(exam_id=exam_id,student_id=student.pk).exclude(answer=0).distinct()
         for record in records:
             question = Question.objects.get(id=record.question_id)
             correct_choice = Choice.objects.get(question=question, is_correct=True)
