@@ -22,6 +22,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <style type="text/css">
+        .teacher-photo {
+            max-height: 100px; /* Adjust the height as needed */
+            width: auto;
+        }
       .bs-example {
         margin: 0px;
         /* height: 10px; */
@@ -119,6 +123,24 @@
         text-align: center;
 
       }
+      html {
+        position: relative;
+        min-height: 100%;
+    }
+
+    body {
+        margin-bottom: 100px; /* Height of the footer */
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 100px; /* Height of the footer */
+        background-color: #f5f5f5;
+        padding-top: 20px; /* Padding for content inside the footer */
+    }
+
     </style>
   </head>
 
@@ -164,44 +186,43 @@
 
         </div>
       </nav>
-      <br>
-      <section id="section-jumbotron" class="jumbotron jumbotron-fluid d-flex justify-content-center align-items-center">
-        <div class="container text-center">
-          <h2 class="display-3 text-info">Online Examination System</h2>
-          <p class="display-4 d-none d-sm-block">Attend your examinations online!</p>
-          <p class="lead">Sign Up now to start your first online examination</p>
-    
-    
-          <p><strong> Start Your Journey Here:</strong></p>
-          <a href="{% url 'student:student_registration' %}" class="btn btn-lg btn-info"
-            style="padding-right: 35px; border-radius: 0%;"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Sign Up
-            as Student</a>
-    
-          <br><br><br>
-        </div>
-      </section>
     </div>
 
-    <div class="container">
-        <h3 class="mt-5 mb-4">Recent Feedbacks</h3>
-        <div class="row">
-            {% for feedback in feedbacks %}
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ feedback.username }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ feedback.email }}</h6>
-                        <p class="card-text">{{ feedback.message }}</p>
-                        <p class="card-text">Rating: {{ feedback.rating }}</p>
-                        <p class="card-text"><small class="text-muted">Created at: {{ feedback.created_at }}</small></p>
-                    </div>
-                </div>
+    <div class="container mt-5">
+        <div class="p-2">
+            <h1 class="m-5">About Us</h1>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Photo</th>
+                            <th>Teacher ID</th>
+                            <th>College</th>
+                            <th>Branch</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for teacher in teachers %}
+                            <tr>
+                                <td>{{ teacher.user.get_full_name }}</td>
+                                <td>
+                                    {% if teacher.photo %}
+                                        <img class="teacher-photo img-fluid" src="{{ teacher.photo.url }}" alt="{{ teacher.user.get_full_name }}">
+                                    {% endif %}
+                                </td>
+                                <td>{{ teacher.teacher_id }}</td>
+                                <td>{{ teacher.college }}</td>
+                                <td>{{ teacher.branch }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            {% endfor %}
-        </div>
+        </div> 
     </div>
 
-    <footer class=" bg-secondary text-light">
+    <footer class="footer bg-secondary text-light">
 
         <br>
         <div class="container">

@@ -315,6 +315,10 @@ def update_teacher_details(request):
         messages.error(request, "Please Login again to proceed")
         return redirect('teacher:loginadmin')
 
+def about_us(request):
+    teachers = Teacher.objects.all()
+    return render(request, 'teacher/about_us.html', {'teachers': teachers})
+
 @login_required(login_url='/teacher/portal/login')    
 def logoutAdmin(request):
     logout(request)

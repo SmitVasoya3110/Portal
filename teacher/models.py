@@ -8,6 +8,7 @@ class Teacher(models.Model):
     teacher_id = models.IntegerField(default=1)
     college = models.ForeignKey(College, on_delete=models.CASCADE, related_name="college")
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    photo = models.ImageField(verbose_name="Photo", upload_to='teacher_photos', blank=True, null=True)
     last_login = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
