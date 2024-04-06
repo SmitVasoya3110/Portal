@@ -155,7 +155,7 @@ def result(request,id):
             score += 5
     exam = Exam.objects.get(pk=id)
     student = Student.objects.get(user=request.user)
-    exam_result = ExamResult.objects.create(user=request.user, student=student, exam=exam, score=score)
+    exam_result = ExamResult.objects.create(user=request.user, student=student, exam=exam, score=score, marks=len(compare_list)*5)
     return render(request, 'student/result.html', {'score':score, "total_score":5*len(question_list)})
     
 @login_required(login_url='/student/login')

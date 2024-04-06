@@ -120,7 +120,8 @@ class ExamResult(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     completed_at = models.DateTimeField(auto_now_add=True)
     score = models.FloatField()
-
+    marks = models.FloatField(default=50)
+    
     def clean(self):
         if self.score < 0 or self.score > 100:
             raise ValidationError("Score must be between 0 and 100.")
