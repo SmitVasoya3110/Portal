@@ -10,6 +10,9 @@ from django.utils.translation import gettext as _
 admin.site.site_header = "Portal Admin"
 admin.site.site_title = "Portal Admin"
 admin.site.index_title = "Portal Admin"
+admin.site.login_template = 'admin/registration/login.html'
+
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     ordering = ('email',)
@@ -56,10 +59,13 @@ class QuestionAdmin(admin.ModelAdmin):
     # search_fields = ['question_text', 'exam', 'category']
     
 
+
+# admin_site = MyAdminSite(name='Portal Admin')
+
 admin.site.register(Exam, ExamnAdmin)
 admin.site.register(ExamResult, ExamResultAdmin)
-admin.site.register(Question, QuestionAdmin)
+# admin.site.register(Question, QuestionAdmin)
 # admin.site.register(Choice)
-admin.site.register(Record)
+# admin.site.register(Record)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Branch)

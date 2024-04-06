@@ -18,10 +18,10 @@
   
 
   
-{% if score > 60 %}
+{% if score > 30 %}
 <div class="jumbotron green text-center">
     <h1 class="display-4">{{ request.user }}</h1>
-    <p class="lead">You have successfully passed the exam with score of <b>{{ score }}</b></p>
+    <p class="lead">You have successfully passed the exam with score of <b>{{ score }} out of {{ total_scorre }}</b></p>
     <hr class="my-4">
     <a class="btn btn-primary btn-lg" href="{% url 'student:logout' %}" role="button">Log Out</a>
 </div>
@@ -29,7 +29,7 @@
 {% else %}
 <div class="jumbotron red text-center">
     <h1 class="display-4">{{ request.user }}</h1>
-    <p class="lead">You failed in this exam with score of <b>{{ score }}</b></p>
+    <p class="lead">You failed in this exam with score of <b>{{ score }} out of {{ total_scorre }}</b></p>
     <hr class="my-4">
     
     <a class="btn btn-primary btn-lg" href="{% url 'home' %}" role="button">Log Out</a>

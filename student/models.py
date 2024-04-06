@@ -45,6 +45,8 @@ class Branch(models.Model):
 
     class Meta:
         unique_together = ('branch_name', 'college')
+        verbose_name = "Branch"
+        verbose_name_plural = "Branches "
 
     def get_branch_name(self):
         return self.branch_name

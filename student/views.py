@@ -152,11 +152,11 @@ def result(request,id):
         print(int(record.answer) == int(true_answer.id))
         if int(record.answer) == int(true_answer.id):
 
-            score += 2
+            score += 5
     exam = Exam.objects.get(pk=id)
     student = Student.objects.get(user=request.user)
     exam_result = ExamResult.objects.create(user=request.user, student=student, exam=exam, score=score)
-    return render(request, 'student/result.html', {'score':score})
+    return render(request, 'student/result.html', {'score':score, "total_score":5*len(question_list)})
     
 @login_required(login_url='/student/login')
 def signout(request):

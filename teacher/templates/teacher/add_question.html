@@ -32,7 +32,7 @@
         $(document).ready(function() {
             // Keep track of the last checked is_correct checkbox
             var lastChecked = null;
-    
+            $('#id_exam').prop('disabled', true)
             // Handle change event for is_correct checkboxes
             $('input[name$="-is_correct"]').change(function() {
                 // Uncheck the previous is_correct checkbox

@@ -143,7 +143,6 @@
 
           <ul>
             <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'teacher:loginadmin' %}">Teacher</a></li>
             <li>
               <a href="#">Student</a>
               <ul class="dropdown">
@@ -153,10 +152,21 @@
 
               </ul>
             </li>
-            <li><a href="{% url 'contact:contact_us' %}">Contact Us</a></li>
-            <li><a href="{% url 'contact:feedback' %}">Feedback</a></li>
-            <li><a href="{% url 'admin:login' %}">Admin</a></li>
-            <li><a href="{% url 'teacher:about_us' %}">About Us</a></li>
+            <li>
+              <a href="#">Links</a>
+              <ul class="dropdown">
+                <li><a href="{% url 'contact:contact_us' %}">Contact Us</a></li>
+                <li><a href="{% url 'contact:feedback' %}">Feedback</a></li>
+                <li><a href="{% url 'teacher:about_us' %}">About Us</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#"> Administration</a>
+              <ul class="dropdown">
+                <li><a href="{% url 'admin:login' %}">Admin</a></li>
+                <li><a href="{% url 'teacher:loginadmin' %}">Teacher</a></li>
+              </ul>
+            </li>
           </ul>
 
 

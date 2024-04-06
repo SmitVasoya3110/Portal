@@ -17,6 +17,8 @@ class ContactUsAdmin(admin.ModelAdmin):
     list_filter = ('replied',)
     inlines = [AdminReplyInline]
 
+    def has_add_permission(self, request, obj=None):
+        return False
     # def save_model(self, request, obj, form, change):
     #     print(request)
     #     print(obj.adminreply_set)
